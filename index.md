@@ -20,6 +20,7 @@ knit        : slidify::knit2slides
     -   Hypertension
     -   Heart Disease
     -   Cancer
+-   BMI values can be useful for estimating risk for diseases and monitoring effects of weight gain or loss.
 
 ---
 
@@ -45,6 +46,8 @@ $$\frac{weight_{pounds} x 703}{height_{inches}^2}$$
 ---
 
 ##  BMI Calculator Program
+
+A simple BMI calculator program will allow users to quickly calculate BMI values.  
 
 This program can be accessed at: https://dmungas.shinyapps.io/BMI_Calc
 
