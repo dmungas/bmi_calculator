@@ -1,0 +1,102 @@
+---
+title       : BMI Calculator
+subtitle    : Rationale and Instructions
+author      : 
+job         : 
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : [bootstrap, mathjax]            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Background
+
+-   The body mass index (BMI) is a simple function of height and weight
+-   It has been widely used to quantify obesity
+-   There are many studies showing a relationship of BMI with various health outcomes including   
+    -   Diabetes
+    -   Hypertension
+    -   Heart Disease
+    -   Cancer
+
+---
+
+## Associations of BMI with Diabetes, Hypertension, and Hypercholesterolemia
+
+Association of Body Mass Index (BMI) with common cardiovascular risk factor in a racially/ethnically diverse sample from a longitudinal study of cognitive aging. Participants are 60+ years of age. Results show significant associations of BMI with all three diagnoses. While these associations are relatively weak, they correspond to large population effects.
+
+```{r echo=FALSE, fig.height=5.0, fig.width=12.0, message=FALSE}
+require(lattice)
+require(tidyr)
+
+bmi <- read.csv("bmi_health.csv")
+
+bmi$diabetes <- factor(ifelse(bmi$diabetes1 %in% c(0,1),0,
+            ifelse(bmi$diabetes1 %in% 2,1,NA)),labels=c("Not Present","Present"))
+bmi$hypertension <- factor(ifelse(bmi$htn1 %in% c(0,1),0,
+                       ifelse(bmi$htn1 %in% 2,1,NA)),labels=c("Not Present","Present"))
+bmi$hyperlipidemia <- factor(ifelse(bmi$hyperlip1 %in% c(0,1),0,
+                       ifelse(bmi$hyperlip1 %in% 2,1,NA)),labels=c("Not Present","Present"))
+bmi2 <- gather(bmi[,c("senasid","bmi1","diabetes","hypertension","hyperlipidemia")],label,value,diabetes:hyperlipidemia)
+
+fitd <- lm(bmi1 ~ diabetes, data=bmi)
+pdiab <- 1 - (pf(summary(fitd)["fstatistic"][[1]]["value"],
+                summary(fitd)["fstatistic"][[1]]["numdf"],
+                summary(fitd)["fstatistic"][[1]]["dendf"]))
+pdiab <- ifelse(pdiab<.001,.001,pdiab)
+rsqdiab <- summary(fitd)$r.squared
+
+fithtn <- lm(bmi1 ~ hypertension, data=bmi)
+phtn <- 1 - (pf(summary(fithtn)["fstatistic"][[1]]["value"],
+                 summary(fithtn)["fstatistic"][[1]]["numdf"],
+                 summary(fithtn)["fstatistic"][[1]]["dendf"]))
+phtn <- ifelse(phtn<.001,.001,phtn)
+rsqhtn <- summary(fithtn)$r.squared
+
+fithlip <- lm(bmi1 ~ hyperlipidemia, data=bmi)
+phlip <- 1 - (pf(summary(fithlip)["fstatistic"][[1]]["value"],
+                 summary(fithlip)["fstatistic"][[1]]["numdf"],
+                 summary(fithlip)["fstatistic"][[1]]["dendf"]))
+phlip <- ifelse(phlip<.001,.001,phlip)
+rsqhlip <- summary(fithlip)$r.squared
+
+
+bmi2$label <- ifelse(bmi2$label == 'diabetes', 
+            paste("Diabetes (Rsq = ",round(rsqdiab,digits=3), ", p = ",round(pdiab,digits=3),")",sep=""),
+        ifelse(bmi2$label == 'hypertension',
+            paste("Hypertension (Rsq = ",round(rsqhtn,digits=3), ", p = ",round(phtn,digits=3),")",sep=""),
+        ifelse(bmi2$label == 'hyperlipidemia',
+            paste("Hyperlipidemia (Rsq = ",round(rsqhlip,digits=3), ", p = ",round(phlip,digits=3),")",sep=""),
+        NA)))
+
+bwplot(bmi1 ~ value | label, data=bmi2, layout=c(3,1))
+```
+
+---
+
+##  BMI Calculation
+
+-   BMI can be calculated using Metric or English units for measuring height or weight
+-   The formula for Metric measurement units is:
+
+$$\frac{weight_{kilograms}}{height_{meters}^2}$$
+
+- The formula for English measurement units is:
+
+$$\frac{weight_{pounds} x 703}{height_{inches}^2}$$
+
+---
+
+##  BMI Calculator Program
+
+This program can be accessed at: https://dmungas.shinyapps.io/BMI_Calc
+
+To calculate the BMI associated with a specific height and weight: 1) select units 
+of measurement for height and weight (English versus Metric), 2) enter height (in 
+appropriate units) in dropdown menu, and 3) enter weight (in appropriate units)
+in dropdown menu. The calculated BMI value will be displayed.
+
+
+
