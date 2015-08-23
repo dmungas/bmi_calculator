@@ -20,6 +20,7 @@ knit        : slidify::knit2slides
     -   Hypertension
     -   Heart Disease
     -   Cancer
+-   BMI values can be useful for estimating risk for diseases and monitoring effects of weight gain or loss.
 
 ---
 
