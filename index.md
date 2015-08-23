@@ -46,6 +46,8 @@ $$\frac{weight_{pounds} x 703}{height_{inches}^2}$$
 
 ##  BMI Calculator Program
 
+A simple BMI calculator program will allow users to quickly calculate BMI values.  
+
 This program can be accessed at: https://dmungas.shinyapps.io/BMI_Calc
 
 To calculate the BMI associated with a specific height and weight: 1) select units 
